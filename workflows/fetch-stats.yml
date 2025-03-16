@@ -1,0 +1,29 @@
+name: Fetch Subreddit Stats
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+
+jobs:
+  fetch-stats:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run fetch-stats
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
+          REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
+        run: npx ts-node scripts/fetch-stats.ts

@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "baseUrl": ".",  // Koren folder projekta
+    "paths": {
+      "@/*": ["src/*"]  // @ se mapira na src folder
+    },
+    "outDir": "./dist",  // Ako želiš izlazne datoteke u dist
+    "rootDir": ".",  // Koren projekta
+    "resolveJsonModule": true
+  },
+  "include": [
+    "src/**/*"  // Uključivanje svih TypeScript fajlova iz src foldera
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
