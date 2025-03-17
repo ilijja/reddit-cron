@@ -66,22 +66,27 @@ async function main() {
         }
       }
 
-      console.log("adding to db");
-      await connectDB();
       await StatsModel.insertMany(results);
-      console.log("finishing");
     }
     console.log("finished all");
   } catch (error) {
     console.error("Cron error from main:", error);
   } finally {
-    await mongoose.disconnect();
+    try {
+      await mongoose.disconnect();
+      console.log("MongoDB konekcija uspešno zatvorena.");
+    } catch (error) {
+      console.error("Greška pri zatvaranju MongoDB konekcije:", error);
+    }
   }
 }
 
 main()
-  .then(() => process.exit(0))
+  .then(() => {
+    console.log("Sve završeno, gasim proces.");
+    process.exit(0);
+  })
   .catch((error) => {
-    console.error("Unhandled error:", error);
+    console.error("Neuhvaćena greška:", error);
     process.exit(1);
   });
