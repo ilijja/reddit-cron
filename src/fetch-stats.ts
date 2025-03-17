@@ -65,9 +65,12 @@ async function main() {
         }
       }
 
+      console.log("adding to db");
       await connectDB();
       await StatsModel.insertMany(results);
+      console.log("finishing");
     }
+    console.log("finished all");
   } catch (error) {
     console.error("Cron error:");
   }
