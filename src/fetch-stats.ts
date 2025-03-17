@@ -65,6 +65,7 @@ async function main() {
         }
       }
 
+      await connectDB();
       await StatsModel.insertMany(results);
     }
   } catch (error) {
