@@ -23,7 +23,9 @@ jobs:
 
       - name: Run fetch-stats
         env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          ACCESS_TOKEN_URL: ${{ secrets.ACCESS_TOKEN_URL }}
           REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
           REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          REQUEST_USER_AGENT: ${{secrets.REQUEST_USER_AGENT}}
         run: npx ts-node src/fetch-stats.ts

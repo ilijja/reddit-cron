@@ -1,7 +1,6 @@
 import axios from "axios";
 
 export async function getAppAccessToken() {
-  console.log(process.env.ACCESS_TOKEN_URL);
 
   try {
     const response = await axios.post(
