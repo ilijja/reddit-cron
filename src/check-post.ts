@@ -1,7 +1,7 @@
 import axios from "axios";
 import { connectDB } from "../lib/mongodb";
 import PostModel from "../models/posts";
-
+import mongoose from "mongoose";
 
 async function main() {
   try {
@@ -35,6 +35,8 @@ async function main() {
     console.log("All posts processed successfully.");
   } catch (error) {
     console.error("Error in main function:", error);
+  } finally {
+    await mongoose.disconnect();
   }
 }
 

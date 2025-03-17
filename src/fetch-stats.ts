@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { connectDB } from "../lib/mongodb";
 import StatsModel from "../models/stats";
 import SubredditModel from "../models/subreddit";
@@ -24,7 +25,7 @@ async function fetchSubredditData(subredditName: string, accessToken: string) {
 
     return result.data.active_user_count || 0;
   } catch (error) {
-    console.log("error in fetch_sub_data");
+    console.log("error in fetch_sub_data:", error);
 
     return 0;
   }
@@ -72,8 +73,15 @@ async function main() {
     }
     console.log("finished all");
   } catch (error) {
-    console.error("Cron error:");
+    console.error("Cron error from main:", error);
+  } finally {
+    await mongoose.disconnect();
   }
 }
 
-main().catch(console.error);
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error("Unhandled error:", error);
+    process.exit(1);
+  });
