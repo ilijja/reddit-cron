@@ -1,7 +1,7 @@
 name: Check posts
 
 on:
-  schedule:
+  repository_dispatch:
    types: [trigger-check-posts]
 
 jobs:
