@@ -2,7 +2,7 @@ name: Check posts
 
 on:
   schedule:
-    - cron: "*/5 * * * *"
+   types: [trigger-check-posts]
 
 jobs:
   check-posts:
