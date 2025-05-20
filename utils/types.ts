@@ -58,8 +58,7 @@ export interface IPost extends Document {
 export interface AvgStats extends Document {
   _id: mongoose.Types.ObjectId;
   name: string;
-  day: string;
-  time: string;
+  timestamp: Date;
   sum: number;
   n: number;
   avg: number;

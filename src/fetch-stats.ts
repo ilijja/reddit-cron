@@ -59,25 +59,25 @@ async function main() {
           timestamp: batchTimestamp,
         });
 
-        const utcDate = new Date(batchTimestamp.toISOString());
-        const day = utcDate.toLocaleString("en-US", {
-          weekday: "long",
-          timeZone: "UTC",
-        });
-        const time = utcDate.toISOString().slice(11, 16);
-
         await AvgStatsModel.findOneAndUpdate(
-          { name: sub.name, day, time },
+          { name: sub.name, timestamp: batchTimestamp },
           [
             {
               $set: {
                 sum: { $add: [{ $ifNull: ["$sum", 0] }, { $literal: count }] },
-                n: { $add: [{ $ifNull: ["$n", 0] }, { $literal: count > 0 ? 1 : 0 }] },
+                n: {
+                  $add: [
+                    { $ifNull: ["$n", 0] },
+                    { $literal: count > 0 ? 1 : 0 },
+                  ],
+                },
               },
             },
             {
               $set: {
-                avg: { $cond: [{ $gt: ["$n", 0] }, { $divide: ["$sum", "$n"] }, 0] },
+                avg: {
+                  $cond: [{ $gt: ["$n", 0] }, { $divide: ["$sum", "$n"] }, 0],
+                },
               },
             },
           ],

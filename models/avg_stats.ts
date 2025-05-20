@@ -4,8 +4,7 @@ import { AvgStats } from "../utils/types";
 const avgStatsSchema = new Schema<AvgStats>(
   {
     name: { type: String, required: true },
-    day: { type: String, required: true },
-    time: { type: String, required: true },
+    timestamp: { type: Date, required: true },
     sum: { type: Number, required: true },
     n: { type: Number, required: true },
     avg: { type: Number, required: true },
