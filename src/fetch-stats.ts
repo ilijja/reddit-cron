@@ -71,13 +71,13 @@ async function main() {
           [
             {
               $set: {
-                sum: { $add: ["$sum", { $literal: count }] },
-                n: { $add: ["$n", { $literal: count > 0 ? 1 : 0 }] },
+                sum: { $add: [{ $ifNull: ["$sum", 0] }, { $literal: count }] },
+                n: { $add: [{ $ifNull: ["$n", 0] }, { $literal: count > 0 ? 1 : 0 }] },
               },
             },
             {
               $set: {
-                avg: { $divide: ["$sum", "$n"] },
+                avg: { $cond: [{ $gt: ["$n", 0] }, { $divide: ["$sum", "$n"] }, 0] },
               },
             },
           ],
