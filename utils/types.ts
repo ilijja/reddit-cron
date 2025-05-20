@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { mongo } from "mongoose";
 
 export interface Stats extends Document {
   _id: string;
@@ -29,7 +29,6 @@ export interface Flair {
   name: string;
 }
 
-
 export enum PostStatus {
   SCHEDULED = "scheduled",
   FAILED = "failed",
@@ -54,4 +53,14 @@ export interface IPost extends Document {
   time: Date;
   redditPostId: string;
   comment: string;
+}
+
+export interface AvgStats extends Document {
+  _id: mongoose.Types.ObjectId;
+  name: string;
+  day: string;
+  time: string;
+  sum: number;
+  n: number;
+  avg: number;
 }

@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { connectDB } from "../lib/mongodb";
 import StatsModel from "../models/stats";
 import SubredditModel from "../models/subreddit";
+import AvgStatsModel from "../models/avg_stats";
 import { getAppAccessToken } from "../utils/reddit";
 import axios from "axios";
 import dotenv from "dotenv";
@@ -58,10 +59,32 @@ async function main() {
           timestamp: batchTimestamp,
         });
 
-        console.log("sub: ", sub.name, "Count: ", count);
+        const utcDate = new Date(batchTimestamp.toISOString());
+        const day = utcDate.toLocaleString("en-US", {
+          weekday: "long",
+          timeZone: "UTC",
+        });
+        const time = utcDate.toISOString().slice(11, 16);
+
+        await AvgStatsModel.findOneAndUpdate(
+          { name: sub.name, day, time },
+          [
+            {
+              $set: {
+                sum: { $add: ["$sum", { $literal: count }] },
+                n: { $add: ["$n", { $literal: count > 0 ? 1 : 0 }] },
+              },
+            },
+            {
+              $set: {
+                avg: { $divide: ["$sum", "$n"] },
+              },
+            },
+          ],
+          { upsert: true, new: true }
+        );
 
         if (i < subreddits.length - 1) {
-          console.log(`Pauza 1100ms pre sledećeg subreddita...`);
           await sleep(1100);
         }
       }
