@@ -1,6 +1,6 @@
 import mongoose, { mongo } from "mongoose";
 
-export interface Stats extends Document {
+export interface Stats {
   _id: string;
   subreddit_name: string;
   count: number;

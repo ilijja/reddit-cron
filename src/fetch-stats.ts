@@ -4,33 +4,12 @@ import StatsModel from "../models/stats";
 import SubredditModel from "../models/subreddit";
 import AvgStatsModel from "../models/avg_stats";
 import { getAppAccessToken } from "../utils/reddit";
-import axios from "axios";
 import dotenv from "dotenv";
+import { fetchSubredditData } from "../utils/utils";
+import getValidatedCount from "../utils/useValidate";
 dotenv.config();
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-const getURL = (subredditName: string) =>
-  `https://oauth.reddit.com/r/${subredditName}/about.json`;
-
-async function fetchSubredditData(subredditName: string, accessToken: string) {
-  try {
-    const response = await axios.get(getURL(subredditName), {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "User-Agent": process.env.REQUEST_USER_AGENT,
-        "Content-Type": "application/json",
-      },
-    });
-    const result = response.data;
-
-    return result.data.active_user_count || 0;
-  } catch (error) {
-    console.log("error in fetch_sub_data:", error);
-
-    return 0;
-  }
-}
 
 async function main() {
   try {
@@ -53,9 +32,11 @@ async function main() {
         const sub = subreddits[i];
         const count = await fetchSubredditData(sub.name, accessToken);
 
+        const validatedCount = await getValidatedCount(sub.name, count);
+
         results.push({
           subreddit_name: sub.name,
-          count,
+          count: validatedCount,
           timestamp: batchTimestamp,
         });
 
@@ -64,11 +45,16 @@ async function main() {
           [
             {
               $set: {
-                sum: { $add: [{ $ifNull: ["$sum", 0] }, { $literal: count }] },
+                sum: {
+                  $add: [
+                    { $ifNull: ["$sum", 0] },
+                    { $literal: validatedCount },
+                  ],
+                },
                 n: {
                   $add: [
                     { $ifNull: ["$n", 0] },
-                    { $literal: count > 0 ? 1 : 0 },
+                    { $literal: validatedCount > 0 ? 1 : 0 },
                   ],
                 },
               },

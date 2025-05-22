@@ -9,7 +9,7 @@ async function main() {
 
     const now = new Date();
     const nextMinute = new Date(now);
-    nextMinute.setMinutes(now.getMinutes() + 1);
+    nextMinute.setMinutes(now.getMinutes() + 5);
 
     const posts = await PostModel.find({
       $and: [{ time: { $lt: nextMinute } }, { status: "scheduled" }],
