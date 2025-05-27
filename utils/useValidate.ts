@@ -3,7 +3,7 @@ import StatsModel from "../models/stats";
 const validateWithAdaptiveThreshold = (
   newValue: number,
   recentValues: number[],
-  threshold = 6
+  threshold = 4
 ): number => {
   if (recentValues.length < 3) return newValue;
 
