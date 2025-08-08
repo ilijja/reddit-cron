@@ -16,6 +16,8 @@ async function main() {
     await connectDB();
     const accessToken = await getAppAccessToken();
 
+    console.log(accessToken)
+
     const now = new Date();
     const batchTimestamp = new Date(
       now.setMinutes(Math.floor(now.getMinutes() / 10) * 10, 0, 0)
@@ -31,6 +33,7 @@ async function main() {
       for (let i = 0; i < subreddits.length; i++) {
         const sub = subreddits[i];
         const count = await fetchSubredditData(sub.name, accessToken);
+        console.log(count)
 
         const validatedCount = await getValidatedCount(sub.name, count);
 
